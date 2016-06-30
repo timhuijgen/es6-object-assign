@@ -6,45 +6,49 @@
 
 'use strict';
 
-function assign(target, firstSource) {
-  if (target === undefined || target === null) {
-    throw new TypeError('Cannot convert first argument to object');
-  }
-
-  var to = Object(target);
-  for (var i = 1; i < arguments.length; i++) {
-    var nextSource = arguments[i];
-    if (nextSource === undefined || nextSource === null) {
-      continue;
+function assign (target, firstSource) {
+    if ( target === undefined || target === null ) {
+        throw new TypeError('Cannot convert first argument to object');
     }
 
-    var keysArray = Object.keys(Object(nextSource));
-    for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
-      var nextKey = keysArray[nextIndex];
-      var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
-      if (desc !== undefined && desc.enumerable) {
-        to[nextKey] = nextSource[nextKey];
-      }
+    var to = Object(target);
+    for ( var i = 1; i < arguments.length; i++ ) {
+        var nextSource = arguments[ i ];
+        if ( nextSource === undefined || nextSource === null ) {
+            continue;
+        }
+
+        var keysArray = Object.keys(Object(nextSource));
+        for ( var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++ ) {
+            var nextKey = keysArray[ nextIndex ];
+            var desc    = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+            if ( desc !== undefined && desc.enumerable ) {
+                to[ nextKey ] = nextSource[ nextKey ];
+            }
+        }
     }
-  }
-  return to;
+    return to;
 }
 
-function polyfill() {
-  if (!Object.assign) {
-    Object.defineProperty(Object, 'assign', {
-      enumerable: false,
-      configurable: true,
-      writable: true,
-      value: assign
-    });
-  }
+function polyfill () {
+    if ( !Object.assign ) {
+        Object.defineProperty(Object, 'assign', {
+            enumerable:   false,
+            configurable: true,
+            writable:     true,
+            value:        assign
+        });
+    }
 }
 
-module.exports = {
-  assign: assign,
-  polyfill: polyfill
-};
 
+if ( typeof exports === 'object' ) {
+    module.exports = exports = {
+        assign: assign,
+        polyfill: polyfill
+    };
+} else { // Auto fill when included in browser
+    polyfill();
+}
 },{}]},{},[1])(1)
 });
